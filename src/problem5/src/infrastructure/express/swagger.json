@@ -1,0 +1,320 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Resource": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"description",
+					"status",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResourceStatus": {
+				"enum": [
+					"ACTIVE",
+					"INACTIVE",
+					"DELETED"
+				],
+				"type": "string"
+			},
+			"ResourceCreateDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ResourceStatus"
+					}
+				},
+				"required": [
+					"name",
+					"description",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ObjectLiteral": {
+				"description": "Interface of the simple literal object with any string keys.",
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"UpdateResult": {
+				"description": "Result object returned by UpdateQueryBuilder execution.",
+				"properties": {
+					"raw": {
+						"description": "Raw SQL result returned by executed query."
+					},
+					"affected": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of affected rows/documents\nNot all drivers support this"
+					},
+					"generatedMaps": {
+						"items": {
+							"$ref": "#/components/schemas/ObjectLiteral"
+						},
+						"type": "array",
+						"description": "Generated values returned by a database.\nHas entity-like structure (not just column database name and values)."
+					}
+				},
+				"required": [
+					"raw",
+					"generatedMaps"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResourceUpdateDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ResourceStatus"
+					}
+				},
+				"required": [
+					"name",
+					"description",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DeleteResult": {
+				"description": "Result object returned by DeleteQueryBuilder execution.",
+				"properties": {
+					"raw": {
+						"description": "Raw SQL result returned by executed query."
+					},
+					"affected": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Number of affected rows/documents\nNot all drivers support this"
+					}
+				},
+				"required": [
+					"raw"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "API",
+		"version": "1.0.0"
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/resources": {
+			"get": {
+				"operationId": "GetResources",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Resource"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Resource"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateResource",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Resource"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Resource"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResourceCreateDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/resources/{id}": {
+			"put": {
+				"operationId": "UpdateResource",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateResult"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Resource"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResourceUpdateDto"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetResource",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Resource"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Resource"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteResource",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteResult"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Resource"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "http://localhost:4000/"
+		}
+	]
+}
